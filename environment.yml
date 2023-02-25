@@ -1,0 +1,6 @@
+name: ols
+channels:
+- cadquery
+dependencies:
+- cadquery=master
+- cq-editor=master
