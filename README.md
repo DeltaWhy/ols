@@ -1,5 +1,7 @@
 # OLS
 The Open Low-Profile Spherical keycap profile.
+![OLS isometric view](image/ols.png)
+![OLS side view](image/ols-side.png)
 
 ## Variations
 ### MX
