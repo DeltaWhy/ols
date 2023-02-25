@@ -1,6 +1,11 @@
 name: ols
 channels:
 - cadquery
+- conda-forge
 dependencies:
 - cadquery=master
 - cq-editor=master
+- jupyterlab
+- pip
+- pip:
+  - jupyter_cadquery
