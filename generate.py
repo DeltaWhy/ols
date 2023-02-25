@@ -2,15 +2,15 @@ import cadquery as cq
 from ols import keycap
 
 r3 = keycap()
-r3_cut = keycap(cut=True)
+r3_cut = keycap(cut=True).rotate((0,0,0),(1,0,0),90)
 r3h = keycap(depth=2.0)
-r3h_cut = keycap(depth=2.0, cut=True)
+r3h_cut = keycap(depth=2.0, cut=True).rotate((0,0,0),(1,0,0),90)
 r3h_dot = keycap(depth=2.0, homingDot=True)
-r3h_dot_cut = keycap(depth=2.0, homingDot=True, cut=True)
+r3h_dot_cut = keycap(depth=2.0, homingDot=True, cut=True).rotate((0,0,0),(1,0,0),90)
 r2 = keycap(angle=-6, height=5.5)
-r2_cut = keycap(angle=-6, height=5.5, cut=0.8)
+r2_cut = keycap(angle=-6, height=5.5, cut=0.8).rotate((0,0,0),(1,0,0),90)
 r4 = keycap(angle=6, height=5.5)
-r4_cut = keycap(angle=6, height=5.5, cut=0.4)
+r4_cut = keycap(angle=6, height=5.5, cut=0.4).rotate((0,0,0),(1,0,0),90)
 
 #assembly = cq.Assembly(cq.Workplane("XY").transformed(rotate=(0,0,90)), color=cq.Color(1,173/255,0))
 #assembly.add(r3)
