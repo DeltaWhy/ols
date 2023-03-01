@@ -19,6 +19,7 @@ def keycap(*,
         thickness = 1.5,
         topThickness = 1.5,
         fillet = 0.5,
+        stemType = 'mx',
         stemTolerance = 0.0,
         stemHeight = 1.0,
         stemChamfer1 = 0.2,
@@ -69,16 +70,31 @@ def keycap(*,
     keycap4 = keycap3 - inner
     #show(keycap4)
 
-    #cross = cq.Sketch().rect(1.17+0.6, 1.17+0.6).vertices().circle(0.3,mode='s').reset().rect(4.1, 1.17).rect(1.17, 4.1)
-    cross = cq.Sketch().circle(5.3/2).rect(1.17+stemTolerance+0.6, 1.17+stemTolerance+0.6, mode='s', tag='x').vertices(tag='x').circle(0.3,mode='a').reset().rect(4.1+stemTolerance, 1.17+stemTolerance, mode='s').rect(1.17+stemTolerance, 4.1+stemTolerance, mode='s').clean()
-    #cross
+    if stemType == 'mx':
+        #cross = cq.Sketch().rect(1.17+0.6, 1.17+0.6).vertices().circle(0.3,mode='s').reset().rect(4.1, 1.17).rect(1.17, 4.1)
+        cross = cq.Sketch().circle(5.3/2).rect(1.17+stemTolerance+0.6, 1.17+stemTolerance+0.6, mode='s', tag='x').vertices(tag='x').circle(0.3,mode='a').reset().rect(4.1+stemTolerance, 1.17+stemTolerance, mode='s').rect(1.17+stemTolerance, 4.1+stemTolerance, mode='s').clean()
+        #cross
 
-    stem = cq.Workplane("XY").placeSketch(cross.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
+        stem = cq.Workplane("XY").placeSketch(cross.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
+    elif stemType == 'choc':
+        choc = (cq.Sketch()
+            .push([(-5.7/2,0),(5.7/2,0)])
+            .rect(0.45,2.9)
+            .rect(0.9, 2.9-0.75)
+            .rect(0.45, 2.9-0.75, mode='c', tag='x')
+            .vertices(tag='x').circle(0.75/2).clean()
+        )
+        stem = cq.Workplane("XY").placeSketch(choc.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
+    else:
+        raise ValueError(stem)
     keycap5 = keycap4 + stem
     #keycap5
 
-    keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
-    #keycap6
+    if stemType == 'mx':
+        keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
+        #keycap6
+    else:
+        keycap6 = keycap5
 
     if homingDot:
         keycap = cq.Workplane("XY").transformed(offset=(0,0,height-depth)).sphere(0.4).add(keycap6).combine()
