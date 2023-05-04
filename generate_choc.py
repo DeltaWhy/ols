@@ -21,7 +21,7 @@ r4_cut = keycap(stemType='choc', angle=6, height=5.5, cut=0.4).rotate((0,0,0),(1
 ##assembly.add(keycap(depth=-1.0, height=5.5, cut=0.5), loc=cq.Location((0, 19.05*3, 0)))
 
 if 'show_object' in locals():
-    show_object(r3)
+    show_object(r3.rotate((0,0,0),(0,0,1),-90))
     show_object(r2.rotate((0,0,0),(0,0,1),-90).translate((-19.05, 0)))
     show_object(r4.rotate((0,0,0),(0,0,1), -90).translate((19.05, 0)))
     

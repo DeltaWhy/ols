@@ -3,6 +3,14 @@
 
 import cadquery as cq
 
+class ZSelector(cq.Selector):
+    z: float = 0.0
+    def __init__(self, z):
+        self.z = z
+    
+    def filter(self, objectList):
+        return [o for o in objectList if abs(o.Center().z - self.z) < 0.00001]
+
 def keycap(*,
         unitX = 1,  # TODO
         unitY = 1,  # TOOD
@@ -21,6 +29,7 @@ def keycap(*,
         fillet = 0.5,
         stemType = 'mx',
         stemTolerance = 0.0,
+        stemTolerance2 = None,
         stemHeight = 1.0,
         stemChamfer1 = 0.2,
         stemChamfer2 = 0.5,
@@ -74,9 +83,16 @@ def keycap(*,
         #cross = cq.Sketch().rect(1.17+0.6, 1.17+0.6).vertices().circle(0.3,mode='s').reset().rect(4.1, 1.17).rect(1.17, 4.1)
         cross = cq.Sketch().circle(5.3/2).rect(1.17+stemTolerance+0.6, 1.17+stemTolerance+0.6, mode='s', tag='x').vertices(tag='x').circle(0.3,mode='a').reset().rect(4.1+stemTolerance, 1.17+stemTolerance, mode='s').rect(1.17+stemTolerance, 4.1+stemTolerance, mode='s').clean()
         #cross
-
-        stem = cq.Workplane("XY").placeSketch(cross.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
+        points = [cq.Location(cq.Vector(0,0,-stemHeight))]
+        if unitX > 2:
+            points.append(cq.Location(cq.Vector((unitX-1)*unit/2,0,-stemHeight)))
+            points.append(cq.Location(cq.Vector(-(unitX-1)*unit/2,0,-stemHeight)))
+        wp = cq.Workplane("XY")
+        wp = wp.placeSketch(*[cross.moved(p) for p in points]).tag('cross')
+        stem = wp.extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
     elif stemType == 'choc':
+        if stemTolerance2 is None:
+            stemTolerance2 = stemTolerance
         choc = (cq.Sketch()
             .push([(-5.7/2,0),(5.7/2,0)])
             .rect(0.45,2.9)
@@ -84,6 +100,15 @@ def keycap(*,
             .rect(0.45, 2.9-0.75, mode='c', tag='x')
             .vertices(tag='x').circle(0.75/2).clean()
         )
+        #show_object(choc)
+        choc = (cq.Sketch()
+            .push([(-5.7/2,0),(5.7/2,0)])
+            .rect(0.45+stemTolerance,2.9+stemTolerance2)
+            .rect(0.9+stemTolerance, 2.9-0.75+stemTolerance2)
+            .rect(0.45+stemTolerance, 2.9-0.75+stemTolerance2, mode='c', tag='x')
+            .vertices(tag='x').circle(0.75/2).clean()
+        )
+        #show_object(choc)
         stem = cq.Workplane("XY").placeSketch(choc.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
     else:
         raise ValueError(stem)
@@ -91,7 +116,8 @@ def keycap(*,
     #keycap5
 
     if stemType == 'mx':
-        keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
+        #keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
+        keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).wires(ZSelector(height - abs(depth) - topThickness) & cq.selectors.RadiusNthSelector(1)).chamfer(stemChamfer2)
         #keycap6
     else:
         keycap6 = keycap5
@@ -110,4 +136,5 @@ def keycap(*,
 
 
 if 'show_object' in locals():
-    show_object(keycap())
+    #show_object(keycap(stemType="choc", stemTolerance=0.05))
+    show_object(keycap(stemType="mx", unitX=6.25))
