@@ -1,16 +1,16 @@
 import cadquery as cq
 from ols import keycap
 
-r3 = keycap(stemType='choc')
-r3_cut = keycap(stemType='choc', cut=True).rotate((0,0,0),(1,0,0),90)
-r3h = keycap(stemType='choc', depth=2.0)
-r3h_cut = keycap(stemType='choc', depth=2.0, cut=True).rotate((0,0,0),(1,0,0),90)
-r3h_dot = keycap(stemType='choc', depth=2.0, homingDot=True)
-r3h_dot_cut = keycap(stemType='choc', depth=2.0, homingDot=True, cut=True).rotate((0,0,0),(1,0,0),90)
-r2 = keycap(stemType='choc', angle=-6, height=5.5)
-r2_cut = keycap(stemType='choc', angle=-6, height=5.5, cut=0.8).rotate((0,0,0),(1,0,0),90)
-r4 = keycap(stemType='choc', angle=6, height=5.5)
-r4_cut = keycap(stemType='choc', angle=6, height=5.5, cut=0.4).rotate((0,0,0),(1,0,0),90)
+r3 = keycap(stemType='choc', stemTolerance=0.05)
+r3_cut = keycap(stemType='choc', stemTolerance=0.05, cut=True).rotate((0,0,0),(1,0,0),90)
+r3h = keycap(stemType='choc', stemTolerance=0.05, depth=2.0)
+r3h_cut = keycap(stemType='choc', stemTolerance=0.05, depth=2.0, cut=True).rotate((0,0,0),(1,0,0),90)
+r3h_dot = keycap(stemType='choc', stemTolerance=0.05, depth=2.0, homingDot=True)
+r3h_dot_cut = keycap(stemType='choc', stemTolerance=0.05, depth=2.0, homingDot=True, cut=True).rotate((0,0,0),(1,0,0),90)
+r2 = keycap(stemType='choc', stemTolerance=0.05, angle=-6, height=5.5)
+r2_cut = keycap(stemType='choc', stemTolerance=0.05, angle=-6, height=5.5, cut=0.8).rotate((0,0,0),(1,0,0),90)
+r4 = keycap(stemType='choc', stemTolerance=0.05, angle=6, height=5.5)
+r4_cut = keycap(stemType='choc', stemTolerance=0.05, angle=6, height=5.5, cut=0.4).rotate((0,0,0),(1,0,0),90)
 
 #assembly = cq.Assembly(cq.Workplane("XY").transformed(rotate=(0,0,90)), color=cq.Color(1,173/255,0))
 #assembly.add(r3)
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     cq.exporters.export(r2_cut, 'generated/choc-lg/ols-v1-r2-cut.stl', tolerance=0.001, angularTolerance=0.05)
     cq.exporters.export(r4, 'generated/choc-lg/ols-v1-r4.stl', tolerance=0.001, angularTolerance=0.05)
     cq.exporters.export(r4_cut, 'generated/choc-lg/ols-v1-r4-cut.stl', tolerance=0.001, angularTolerance=0.05)
-    
+
     cq.exporters.export(r3, 'generated/choc-lg/ols-v1-r3.step')
     cq.exporters.export(r3_cut, 'generated/choc-lg/ols-v1-r3-cut.step')
     cq.exporters.export(r3h, 'generated/choc-lg/ols-v1-r3-home.step')

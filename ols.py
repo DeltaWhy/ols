@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+from typing import Union
 import cadquery as cq
 
 class ZSelector(cq.Selector):
@@ -12,29 +13,29 @@ class ZSelector(cq.Selector):
         return [o for o in objectList if abs(o.Center().z - self.z) < 0.00001]
 
 def keycap(*,
-        unitX = 1,  # TODO
-        unitY = 1,  # TOOD
-        unit = 19.05,
-        bx = 18.3,
-        by = 18.3,
-        rb = 1.5,
-        tx = 13.5,
-        ty = 13.5,
-        rt = 2.5,
-        height = 5.0,
-        angle = 0,
-        depth = 1.5,
-        thickness = 1.5,
-        topThickness = 1.5,
-        fillet = 0.5,
-        stemType = 'mx',
-        stemTolerance = 0.0,
-        stemTolerance2 = None,
-        stemHeight = 1.0,
-        stemChamfer1 = 0.2,
-        stemChamfer2 = 0.5,
-        homingDot = False,
-        cut = False):
+           unitX = 1,  # TODO
+           unitY = 1,  # TOOD
+           unit = 19.05,
+           bx = 18.3,
+           by = 18.3,
+           rb = 1.5,
+           tx = 13.5,
+           ty = 13.5,
+           rt = 2.5,
+           height = 5.0,
+           angle = 0,
+           depth = 1.5,
+           thickness = 1.5,
+           topThickness = 1.5,
+           fillet = 0.5,
+           stemType = 'mx',
+           stemTolerance = 0.0,
+           stemTolerance2 = None,
+           stemHeight = 1.0,
+           stemChamfer1 = 0.2,
+           stemChamfer2 = 0.5,
+           homingDot = False,
+           cut: Union[bool, float] = False):
     baseX = unit * (unitX - 1) + bx
     baseY = unit * (unitY - 1) + by
     base = cq.Sketch().rect(baseX, baseY).vertices().fillet(rb)
@@ -84,7 +85,10 @@ def keycap(*,
         cross = cq.Sketch().circle(5.3/2).rect(1.17+stemTolerance+0.6, 1.17+stemTolerance+0.6, mode='s', tag='x').vertices(tag='x').circle(0.3,mode='a').reset().rect(4.1+stemTolerance, 1.17+stemTolerance, mode='s').rect(1.17+stemTolerance, 4.1+stemTolerance, mode='s').clean()
         #cross
         points = [cq.Location(cq.Vector(0,0,-stemHeight))]
-        if unitX > 2:
+        if 2 <= unitX < 3:
+            points.append(cq.Location(cq.Vector(unit*1.25/2,0,-stemHeight)))
+            points.append(cq.Location(cq.Vector(-unit*1.25/2,0,-stemHeight)))
+        elif unitX >= 3:
             points.append(cq.Location(cq.Vector((unitX-1)*unit/2,0,-stemHeight)))
             points.append(cq.Location(cq.Vector(-(unitX-1)*unit/2,0,-stemHeight)))
         wp = cq.Workplane("XY")
@@ -93,14 +97,6 @@ def keycap(*,
     elif stemType == 'choc':
         if stemTolerance2 is None:
             stemTolerance2 = stemTolerance
-        choc = (cq.Sketch()
-            .push([(-5.7/2,0),(5.7/2,0)])
-            .rect(0.45,2.9)
-            .rect(0.9, 2.9-0.75)
-            .rect(0.45, 2.9-0.75, mode='c', tag='x')
-            .vertices(tag='x').circle(0.75/2).clean()
-        )
-        #show_object(choc)
         choc = (cq.Sketch()
             .push([(-5.7/2,0),(5.7/2,0)])
             .rect(0.45+stemTolerance,2.9+stemTolerance2)
@@ -117,6 +113,8 @@ def keycap(*,
 
     if stemType == 'mx':
         #keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
+        if 2 <= unitX < 2.25:
+            stemChamfer2 = min(0.2, stemChamfer2)
         keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).wires(ZSelector(height - abs(depth) - topThickness) & cq.selectors.RadiusNthSelector(1)).chamfer(stemChamfer2)
         #keycap6
     else:
@@ -137,4 +135,4 @@ def keycap(*,
 
 if 'show_object' in locals():
     #show_object(keycap(stemType="choc", stemTolerance=0.05))
-    show_object(keycap(stemType="mx", unitX=6.25))
+    show_object(keycap(stemType="mx", unitX=2.0))
