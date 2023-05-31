@@ -48,7 +48,7 @@ def keycap(*,
     keycap1 = cq.Workplane("XY").tag("base").placeSketch(base).add(faceTop).loft()
     #keycap1
 
-    dishOffset = height + depth if depth < 0 else height
+    dishOffset = height + depth - 0.1 if depth < 0 else height
     scoop = (
         cq.Workplane("XZ").transformed(offset=(0, dishOffset, 0), rotate=(angle, 0, 0))
         .add(keycap1).moveTo(-topX/2-0.2,0).threePointArc((0, -depth),(topX/2+0.2,0))
@@ -56,15 +56,24 @@ def keycap(*,
     )
     #show(keycap1, scoop)
 
-    r = depth/2 + ((baseX/2+0.5)*2)**2/(8*depth)
-    dish = (cq.Workplane("XZ").transformed(offset=(0, dishOffset, -0.5), rotate=(angle, 0, 0))
-        .moveTo(-baseX/2-0.5,0).radiusArc((0, -depth),-r)
-        .lineTo(0, height).lineTo(-baseX/2, height).close().revolve(360, combine=False)
-    )
-    #show(keycap1, dish)
+    if depth >= 0:
+        r = depth/2 + ((baseX/2+0.5)*2)**2/(8*depth)
+        dish = (cq.Workplane("XZ").transformed(offset=(0, dishOffset, -0.5), rotate=(angle, 0, 0))
+            .moveTo(-baseX/2-0.5,0).radiusArc((0, -depth),-r)
+            .lineTo(0, height).lineTo(-baseX/2, height).close().revolve(360, combine=False)
+        )
+    else:
+        r = depth/2 + ((baseX/2+1)*2)**2/(8*depth)
+        dish = (cq.Workplane("XZ").transformed(offset=(0, dishOffset, -1), rotate=(angle, 0, 0))
+            .moveTo(-baseX/2-1,0).radiusArc((0, -depth),-r)
+            .lineTo(0, height).lineTo(-baseX/2, height).close().revolve(360, combine=False)
+        )
     keycap2 = keycap1 - dish
 
-    keycap3 = keycap2.edges(">>Z[-2]").fillet(fillet)
+    if depth >= 0:
+        keycap3 = keycap2.edges(">>Z[-2]").fillet(fillet)
+    else:
+        keycap3 = keycap2.edges(">>Z[-1]").fillet(fillet)
     #keycap3
 
     innerBase = cq.Sketch().rect(baseX - 2*thickness, baseY - 2*thickness).vertices().fillet(rb)
@@ -112,10 +121,13 @@ def keycap(*,
     #keycap5
 
     if stemType == 'mx':
-        #keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).edges(cq.NearestToPointSelector((0,0,height-thickness))).chamfer(stemChamfer2)
         if 2 <= unitX < 2.25:
             stemChamfer2 = min(0.2, stemChamfer2)
-        keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).wires(ZSelector(height - abs(depth) - topThickness) & cq.selectors.RadiusNthSelector(1)).chamfer(stemChamfer2)
+        keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1)
+        for point in points:
+            (x,y,z), _ = point.toTuple()
+            keycap6 = keycap6.edges(cq.NearestToPointSelector((x,y,height-thickness))).chamfer(stemChamfer2)
+        #keycap6 = keycap5.edges("<Z and %Line").chamfer(stemChamfer1).wires(ZSelector(height - abs(depth) - topThickness) & cq.selectors.RadiusNthSelector(1)).chamfer(stemChamfer2)
         #keycap6
     else:
         keycap6 = keycap5
@@ -134,5 +146,6 @@ def keycap(*,
 
 
 if 'show_object' in locals():
-    #show_object(keycap(stemType="choc", stemTolerance=0.05))
-    show_object(keycap(stemType="mx", unitX=2.0))
+    #show_object(keycap(stemType="choc", angle=-6, depth=-1.5, stemTolerance=0.05))
+    show_object(keycap(stemType="mx", angle=-6, depth=-1.5))
+    #show_object(keycap(stemType="mx", angle=-6, depth=-1, unitX=6.25))
