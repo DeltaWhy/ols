@@ -4,18 +4,19 @@ The Open Low-Profile Spherical keycap profile.
 ![OLS side view](image/ols-side.png)
 
 ## Variations
+Each folder contains STL and STEP files of each key. The ones with `-cut` are intended and pre-oriented for FDM printing, and the ones without are suitable for resin.
+
 ### MX
 Keycaps with MX-compatible stems. Designed for low-profile switches (e.g. Gateron KS-27, Gateron KS-33, NuPhy, Kailh Choc v2) but should work with full-sized switches as well.
 
 ### Choc Large
-**Coming soon**
-
 Keycaps with Choc stems but MX spacing.
 
 ### Choc Small
-**Coming soon**
-
 Keycaps with Choc stems for Choc spacing. You'll have gaps if you use them on an MX-spaced board.
+
+### Sprue
+Sprued assemblies ready for printing at JLCPCB or other services. JLCPCB has a limit of 10 objects per file so these are built accordingly.
 
 ## Printing
 For FDM printing, these caps work best oriented at 90 degrees to the build plate. This gives them a strong stem (particularly for Choc stems, any other orientation is very fragile) and a good finger surface even without sanding. You should probably use the `-cut` versions of the files which are pre-oriented. These cut off a bit of the rear edge to give a small flat surface for build plate adhesion.
@@ -61,8 +62,8 @@ python generate.py
 
 ## License
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
 
-### Exceptions
+## Acknowledgements
 
-Contact me or open an issue on this repo if you'd like to use this profile commercially. In general I'll approve selling 3D printed or cast versions of these keycaps - I just don't want anyone mass-producing them without my involvement.
+This work was inspired by [LDSA](https://lowprokb.ca/products/ldsa-low-profile-blank-keycaps) and [OPK](https://github.com/cubiq/OPK) but is not directly based on either. Special thanks to the folks from fingerpunch Discord, who got me into the low-profile rabbit hole in the first place, and have given lots of helpful feedback along the way.
