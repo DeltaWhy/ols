@@ -36,7 +36,8 @@ def keycap(*,
            stemChamfer2 = 0.5,
            stemRot = 0,
            homingDot = False,
-           cut: Union[bool, float] = False):
+           cut: Union[bool, float] = False,
+           bottomText = None):
     baseX = unit * (unitX - 1) + bx
     baseY = unit * (unitY - 1) + by
     base = cq.Sketch().rect(baseX, baseY).vertices().fillet(rb)
@@ -151,6 +152,13 @@ def keycap(*,
     else:
         keycap = keycap6
         
+    if bottomText:
+        t = (cq.Workplane("XY").transformed(offset=(0, 0, height - abs(depth) - topThickness + 0.1))
+             .transformed(offset=(0,0,0), rotate=(angle,180,180))
+             .center(0, 4)
+             .text(bottomText, 1.75, 0.3))
+        keycap = keycap + t
+        
     if cut is True:
         cut = 0.6
     if cut:
@@ -160,11 +168,11 @@ def keycap(*,
 
 
 if 'show_object' in locals():
-    #show_object(keycap(stemType="choc", angle=-6, depth=-1.5, stemTolerance=0.05))
+    show_object(keycap(stemType="choc", angle=6, height=5.5, stemTolerance=0.05, bottomText='0.05'))
     #show_object(keycap(stemType="mx", unitX=2.75, angle=0, depth=-1.0))
     #show_object(keycap(unitX=7, depth=-1.0))
     #show_object(keycap(stemType="mx", angle=-6, depth=-1.5))
     #show_object(keycap(stemType="mx", angle=-6, depth=-1, unitX=6.25))
-    show_object(keycap(stemType="mx", unitY=2.0, height=5.5, angle=-6, depth=-1))
-    show_object(keycap(stemType="choc", unitY=1.5, angle=-6, height=5.5, depth=-1, stemRot=90))
+    #show_object(keycap(stemType="mx", unitY=2.0, height=5.5, angle=-6, depth=-1))
+    #show_object(keycap(stemType="choc", unitY=1.5, angle=-6, height=5.5, depth=-1, stemRot=90))
     #show_object(keycap(stemType="mx", unitY=2.0, angle=-6, height=5.5, depth=-1))
