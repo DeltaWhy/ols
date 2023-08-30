@@ -50,7 +50,7 @@ def keycap(*,
     keycap1 = cq.Workplane("XY").tag("base").placeSketch(base).add(faceTop).loft()
     #keycap1
 
-    dishOffset = height + depth if depth < 0 else height
+    dishOffset = height + depth - 0.1 if depth < 0 else height
     # scoop = (
     #     cq.Workplane("XZ").transformed(offset=(0, dishOffset, 0), rotate=(angle, 0, 0))
     #     .add(keycap1).moveTo(-topX/2-0.2,0).threePointArc((0, -depth),(topX/2+0.2,0))
@@ -61,14 +61,14 @@ def keycap(*,
     if depth >= 0:
         base = max(baseX, baseY)
         r = depth/2 + ((base/2+0.5)*2)**2/(8*depth)
-        dish = (cq.Workplane("XZ").transformed(rotate=(angle, 0, 0)).transformed(offset=(0, dishOffset, 0))
+        dish = (cq.Workplane("XZ").transformed(offset=(0, dishOffset, -0.5), rotate=(angle, 0, 0))
             .moveTo(-base/2-0.5,0).radiusArc((0, -depth),-r)
             .lineTo(0, height).lineTo(-base/2, height).close().revolve(360, combine=False)
         )
     else:
         base = max(baseX, baseY)
         r = depth/2 + ((base/2+1)*2)**2/(8*depth)
-        dish = (cq.Workplane("XZ").transformed(rotate=(angle, 0, 0)).transformed(offset=(0, dishOffset, 0))
+        dish = (cq.Workplane("XZ").transformed(offset=(0, dishOffset, -1 if angle != 0 else 0), rotate=(angle, 0, 0))
             .moveTo(-base/2-1,0).radiusArc((0, -depth),-r)
             .lineTo(0, height).lineTo(-base/2, height).close().revolve(360, combine=False)
         )
@@ -168,7 +168,7 @@ def keycap(*,
 
 
 if 'show_object' in locals():
-    show_object(keycap(stemType="choc", angle=12, height=5.5, stemTolerance=0.05, depth=-1.5))
+    show_object(keycap(stemType="choc", angle=6, height=5.5, stemTolerance=0.05, bottomText='0.05'))
     #show_object(keycap(stemType="mx", unitX=2.75, angle=0, depth=-1.0))
     #show_object(keycap(unitX=7, depth=-1.0))
     #show_object(keycap(stemType="mx", angle=-6, depth=-1.5))
