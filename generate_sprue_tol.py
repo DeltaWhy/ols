@@ -26,6 +26,7 @@ for tol in (-0.05, -0.025, 0, 0.025, 0.05):
     objs.append(keycap(stemType="mx", stemTolerance=tol, bottomText=str(tol)))
     objs.append(keycap(stemType="choc", stemTolerance=tol, bottomText=str(tol)))
 a = sprue_assembly(objs)
-show_object(a.toCompound())
+if 'show_object' in locals():
+    show_object(a.toCompound())
 a.save("generated/sprue/tol-test.step", mode="fused")
 #a.save("generated/sprue/tol-test.stl", mode="fused", tolerance=0.001, angularTolerance=0.05)
