@@ -2,8 +2,8 @@
 The Open Low-Profile Spherical keycap profile.
 ![OLS isometric view](image/ols.png)
 ![OLS side view](image/ols-side.png)
-![KLOR with OLS MX keycaps](image/klor-ols.png)
-![Totem with OLS Choc Small keycaps](image/totem-ols.png)
+![KLOR with OLS MX keycaps](image/klor-ols.jpg)
+![Totem with OLS Choc Small keycaps](image/totem-ols.jpg)
 
 ## Variations
 Each folder contains STL and STEP files of each key. The ones with `-cut` are intended and pre-oriented for FDM printing, and the ones without are suitable for resin.
