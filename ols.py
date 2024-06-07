@@ -123,9 +123,17 @@ def keycap(*,
             .rect(0.9+stemTolerance, 2.9-0.75+stemTolerance2)
             .rect(0.45+stemTolerance, 2.9-0.75+stemTolerance2, mode='c', tag='x')
             .vertices(tag='x').circle(0.75/2).clean()
-        )
+        ) 
         #show_object(choc)
         stem = cq.Workplane("XY").placeSketch(choc.moved(cq.Location(cq.Vector(0,0,-stemHeight)))).tag('cross').extrude(height+stemHeight,combine=False).split(keycap4).solids("<Z")
+        cross = cq.Sketch().circle(5.3/2).rect(1.00+stemTolerance+0.6, 1.00+stemTolerance+0.6, mode='s', tag='x').vertices(tag='x').circle(0.3,mode='a').reset().rect(4.0+stemTolerance, 1.0+stemTolerance, mode='s').rect(1.0+stemTolerance, 4.0+stemTolerance, mode='s').clean()
+        if 2 <= unitX < 3:
+            # choc stabs use 18mm units 
+            points = [cq.Location(cq.Vector(24/2,0,-stemHeight)),
+                      cq.Location(cq.Vector(-24/2,0,-stemHeight))]
+            wp = cq.Workplane("XY")
+            wp = wp.placeSketch(*[cross.moved(p) for p in points]).tag('cross')
+            stem += wp.extrude(height+stemHeight,combine=False).transformed(offset=(0, 0, height - abs(depth) - topThickness + 0.1)).transformed(offset=(0,0,0), rotate=(angle,0,0)).split(keepBottom=True)
     else:
         raise ValueError(stem)
     keycap5 = keycap4 + stem.rotate((0,0,0), (0,0,1), stemRot)
@@ -168,7 +176,7 @@ def keycap(*,
 
 
 if 'show_object' in locals():
-    show_object(keycap(stemType="choc", angle=12, height=5.5, stemTolerance=0.05, depth=-1.5))
+    show_object(keycap(stemType="choc", unitX=2, angle=0, height=5.5, stemTolerance=0.05, depth=-1.5, bx=17.3, by=16.3, tx=12.5, ty=12.5))
     #show_object(keycap(stemType="mx", unitX=2.75, angle=0, depth=-1.0))
     #show_object(keycap(unitX=7, depth=-1.0))
     #show_object(keycap(stemType="mx", angle=-6, depth=-1.5))
